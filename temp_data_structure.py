@@ -1,16 +1,15 @@
 from datetime import datetime
+from random import random
 
 db_as_dictionary = {}
 
 BUBBLE_WAIT_TIME = 300
-BUBBLE_WAIT_NUMBER = 5
 
 class Queue:
 
-    def __init__(self, name, host_in_charge, waiting_bubble_size):
+    def __init__(self, name, waiting_bubble_size):
 
         self.name = name
-        self.host_in_charge = host_in_charge
         self.waiting_bubble_size = waiting_bubble_size
         self.tickets_to_call = []
 
@@ -60,6 +59,7 @@ def createEvent(event_id, list_of_queue_objs):
         return
     else:
         db_as_dictionary[event_id] = list_of_queue_objs
+        return event_id
 
 
 # Call when a user enters an event and selects a queue
@@ -89,6 +89,8 @@ def get_queue_state(event_id, queue_name):
 
         out_bubble = []
         out_not_bubble = []
+        out_time_elasped = the_queue_object.time_elapsed
+        out_ticket_elapsed = the_queue_object.tickets_elapsed
 
         if the_queue_object.tickets_elapsed > 3:
             avg_time_per_ticket = time_elapsed / tickets_elapsed
@@ -104,18 +106,62 @@ def get_queue_state(event_id, queue_name):
                     out_not_bubble.append(the_queue_object.tickets_to_call[i])
 
         else:
-            loop = min(len(the_queue_object.tickets_to_call), BUBBLE_WAIT_NUMBER)
+            loop = min(len(the_queue_object.tickets_to_call), the_queue_object.waiting_bubble_size)
             for i in range(1, loop):
                 out_bubble.append(the_queue_object.tickets_to_call[i])
                 
             if loop < len(the_queue_object.tickets_to_call):
                 for i in range (loop, len(the_queue_object.tickets_to_call)):
                     out_not_bubble.append(the_queue_object.tickets_to_call[i])
+        return out_current, out_bubble, out_not_bubble, out_time_elasped, out_ticket_elapsed
+
+
+def get_random_event_id():
+    return int(random()*10**6)
+
+def get_all_queues_in_event(event_id):
+    if event_id in db_as_dictionary:
+        return db_as_dictionary[event_id]
+    else:
+        print("No such event_id")
+        return
+
+
+
+# -------------------------------------------------------------------------------------------
+# Organizers
+# Input from front end: {Name1: waiting_bubble_size1, Name2: waiting_bubble_size2, etc.}
+# Action              : create new event, i.e., a new key-value pair in the dictionary) 
+# Output to front end : the event_id, i.e., a six digit number
+newEvent1_id = createEvent(get_random_event_id(), [Queue("Line for Beef", 5), Queue("Line for Beyond Meat", 7)])
+print("New event created:", newEvent1_id)
+print("The db is now:", db_as_dictionary)
+# Output to front end TBD
+# -------------------------------------------------------------------------------------------
 
 
 
 
-line1 = Queue("Hack the North Event", "Host David", 5)
+# -------------------------------------------------------------------------------------------
+# Queue Receptionists
+# Input from front end: **first** {event_id: event_id} **then** {queue_name: queue_name}
+# Action              : show queue state
+# Output to front end : out_current, out_bubble, out_not_bubble, out_time_elasped, out_ticket_elapsed
+# -------------------------------------------------------------------------------------------
+
+
+
+# -------------------------------------------------------------------------------------------
+# Attendees
+# Input from front end: **first** {event_id: event_id} **then** {queue_name: queue_name}
+# Action              : add_a_ticket
+# Output to front end : out_current, out_bubble, out_not_bubble, out_time_elasped, out_ticket_elapsed
+# -------------------------------------------------------------------------------------------
+
+
+
+exit()
+line1 = Queue("Hack the North Event", "Receptionist David", 5)
 line1.add_a_ticket()
 for i in range(9000):
     print(i)
