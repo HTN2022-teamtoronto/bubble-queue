@@ -100,8 +100,8 @@ def get_queue_state(event_id, queue_name):
                 out_bubble.append(the_queue_object.tickets_to_call[i])
 
             if loop < len(the_queue_object.tickets_to_call):
-                for i in range (loop, len(the_queue_object.tickets_to_call))
-                out_not_bubble.append(the_queue_object.tickets_to_call[i])
+                for i in range (loop, len(the_queue_object.tickets_to_call)):
+                    out_not_bubble.append(the_queue_object.tickets_to_call[i])
 
         else:
             loop = min(len(the_queue_object.tickets_to_call), BUBBLE_WAIT_NUMBER)
@@ -109,12 +109,10 @@ def get_queue_state(event_id, queue_name):
                 out_bubble.append(the_queue_object.tickets_to_call[i])
                 
             if loop < len(the_queue_object.tickets_to_call):
-                for i in range (loop, len(the_queue_object.tickets_to_call))
-                out_not_bubble.append(the_queue_object.tickets_to_call[i])
+                for i in range (loop, len(the_queue_object.tickets_to_call)):
+                    out_not_bubble.append(the_queue_object.tickets_to_call[i])
 
 
-
-def 
 
 
 line1 = Queue("Hack the North Event", "Host David", 5)
